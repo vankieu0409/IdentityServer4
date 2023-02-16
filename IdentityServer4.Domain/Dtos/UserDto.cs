@@ -13,13 +13,14 @@ namespace IdentityServer4.Domain.Dtos
     {
         public UserDto()
         {
-            Profile= new ProfileDto();
+            Profile = new ProfileDto();
         }
         public Guid Id { get; set; }
         public string UserName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public string RefreshToken { get; set; }
+        public string DisplayName { get; set; }
+        public string Descreption { get; set; }
+        public string Image { get; set; }
+        public string RefreshToken { get; set; } = String.Empty;
         public DateTime TokenCreated { get; set; }
         public DateTime TokenExpires { get; set; }
         public string Role { get; set; }

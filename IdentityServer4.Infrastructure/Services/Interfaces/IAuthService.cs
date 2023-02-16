@@ -6,12 +6,12 @@ namespace IdentityServer4.Infrastructure.Services.Interfaces;
 
 public interface IAuthService
 {
-    public Task<AccessTokenDto> Login(UserViewModel request);
-    public Task<UserDto> RegisterUser(UserViewModel request);
+    public Task<AccessTokenDto> Login(LoginUserViewModel request);
+    public Task<UserDto> RegisterUser(CreateUserViewModel request);
     public Task<AccessTokenDto> RefreshToken();
     public bool VerifyPasswordHash(string password, string passwordHash, string passwordSalt);
     void CreatePasswordHash(string password, out string passwordHash, out string passwordSalt);
-    string CreateToken(UserEntity user);
+    string CreateToken(UserDto user);
     RefreshTokenDto CreateRefreshToken();
-    public void SetRefreshToken(RefreshTokenDto refreshToken, UserEntity user);
+    public void SetRefreshToken(RefreshTokenDto refreshToken, UserDto user);
 }

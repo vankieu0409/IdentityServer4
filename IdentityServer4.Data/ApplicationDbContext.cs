@@ -19,6 +19,12 @@ namespace IdentityServer4.Data
             this.ChangeTracker.LazyLoadingEnabled= false;
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.LogTo(Console.WriteLine);
+        }
+
         public DbSet<ProfileEntities> Profiles { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
