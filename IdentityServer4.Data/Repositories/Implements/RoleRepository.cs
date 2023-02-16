@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace IdentityServer4.Data.Repositories.Implements
 {
-    public class RoleRepository : RepositoryBaseAsync<RoleEntity>, IRoleRepository
+    public class RoleRepository : RepositoryAsync<RoleEntity>, IRoleRepository
     {
-        private readonly ApplicationDbContext _dbContext;
-        public RoleRepository(ApplicationDbContext dbContext) : base(dbContext)
+        private readonly ApplicationDbContext _context;
+        public RoleRepository(ApplicationDbContext context) : base(context,context)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
     }
 }

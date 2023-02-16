@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace IdentityServer4.Data.Repositories.Implements
 {
-    public class UserRepository : RepositoryBaseAsync<UserEntity>, IUserRepository
+    public class UserRepository : RepositoryAsync<UserEntity>, IUserRepository
     {
         private readonly ApplicationDbContext _context;
-        public UserRepository(ApplicationDbContext context) : base(context)
+        public UserRepository(ApplicationDbContext context) : base(context,context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
