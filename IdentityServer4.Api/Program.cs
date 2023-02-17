@@ -8,15 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddApplication(builder.Configuration);
-
-//builder.Services.AddCors(options =>
-//                    options.AddPolicy(
-//                        "AllowInternal",
-//                        policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowedToAllowWildcardSubdomains()
-//                    ));
-builder.Services.AddCors(options => options.AddPolicy("Cors", builder =>
+builder.Services.AddHealthChecks();
+builder.Services.AddCors(options => options.AddPolicy("Cors", policy =>
     {
-        builder.AllowAnyOrigin().
+        policy.AllowAnyOrigin().
             AllowAnyMethod().
             AllowAnyHeader();
     }
@@ -27,7 +22,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        Description = "Standard Authorization header using the Bearer scheme (\"Bearer {token} \")",
+        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
         In = ParameterLocation.Header,
         Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
@@ -44,6 +39,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseHealthChecks("/health");
+
+app.UseCors("Cros");
 
 app.UseHttpsRedirection();
 

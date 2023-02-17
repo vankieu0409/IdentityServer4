@@ -178,19 +178,34 @@ public class AuthService : IAuthService
 
     public string CreateToken(UserDto user)
     {
+        //List<Claim> claims = new List<Claim>
+        //{
+        //    new Claim(ClaimTypes.Name, user.UserName),
+        //    new Claim(ClaimTypes.Role, "Admin")
+        //};
+
+        //var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+        //    _configuration.GetSection("Jwt:Secret").Value));
+
+        //var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        //var token = new JwtSecurityToken(
+        //    claims: claims,
+        //    expires: DateTime.Now.AddDays(1),
+        //    signingCredentials: creds);
         var userRoles = _roleRepository.AsQueryable().FirstOrDefault(p => p.Id == _context.UserRoles.Where(c => c.UserId == user.Id).Select(c => c.RoleId).FirstOrDefault());
         List<Claim> claims = new List<Claim>(){
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Role,userRoles.Name )
+            new Claim(ClaimTypes.Role,userRoles.NormalizedName )
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Secret").Value));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
         var token = new JwtSecurityToken(
-            //issuer: _configuration["Jwt:ValidIssuer"],
-            //audience: _configuration["Jwt:ValidAudience"],
+            issuer: _configuration["Jwt:ValidIssuer"],
+            audience: _configuration["Jwt:ValidAudience"],
             claims: claims,
             expires: DateTime.Now.AddDays(1),
             signingCredentials: creds);

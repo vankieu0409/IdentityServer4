@@ -48,8 +48,8 @@ namespace IdentityServer4.Api.Controllers
             return BadRequest(response.Message);
         }
 
-        [HttpGet, Authorize(Roles = "admin")]
-        public ActionResult<string> Aloha()
+        [HttpGet("huhu"), Authorize(Roles = "owner")]
+        public ActionResult<string> NguyenActionResult()
         {
             return Ok("Aloha! You're authorized!");
         }
