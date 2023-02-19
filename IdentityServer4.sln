@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer4.Api", "IdentityServer4.Api\IdentityServer4.Api.csproj", "{9E4D990B-FC4B-49FB-8AD7-F62AB633AB97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.Api", "IdentityServer4.Api\IdentityServer4.Api.csproj", "{9E4D990B-FC4B-49FB-8AD7-F62AB633AB97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer4.Domain", "IdentityServer4.Domain\IdentityServer4.Domain.csproj", "{B0F12614-A4FC-46F0-BF79-108CD16140E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.Domain", "IdentityServer4.Domain\IdentityServer4.Domain.csproj", "{B0F12614-A4FC-46F0-BF79-108CD16140E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer4.Data", "IdentityServer4.Data\IdentityServer4.Data.csproj", "{8D2A172C-454C-43DA-A9EC-07E9B8FD4B4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.Data", "IdentityServer4.Data\IdentityServer4.Data.csproj", "{8D2A172C-454C-43DA-A9EC-07E9B8FD4B4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer4.Infrastructure", "IdentityServer4.Infrastructure\IdentityServer4.Infrastructure.csproj", "{B9AED240-AFFD-4C15-962B-BCEFFC1DEB20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.Infrastructure", "IdentityServer4.Infrastructure\IdentityServer4.Infrastructure.csproj", "{B9AED240-AFFD-4C15-962B-BCEFFC1DEB20}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer.Client", "IdentityServer.Client\IdentityServer.Client.csproj", "{A486ABA9-EB10-4F2B-A441-D18D01367B11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{B9AED240-AFFD-4C15-962B-BCEFFC1DEB20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9AED240-AFFD-4C15-962B-BCEFFC1DEB20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9AED240-AFFD-4C15-962B-BCEFFC1DEB20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A486ABA9-EB10-4F2B-A441-D18D01367B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A486ABA9-EB10-4F2B-A441-D18D01367B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A486ABA9-EB10-4F2B-A441-D18D01367B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A486ABA9-EB10-4F2B-A441-D18D01367B11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

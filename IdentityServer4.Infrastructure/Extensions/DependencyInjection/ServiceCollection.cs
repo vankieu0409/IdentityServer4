@@ -58,6 +58,7 @@ namespace IdentityServer4.Infrastructure.Extensions.DependencyInjection
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<UserManager<UserEntity>>();
+            services.AddScoped<SignInManager<UserEntity>>();
 
             services.AddTransient<IAuthService,AuthService>();
             return services;

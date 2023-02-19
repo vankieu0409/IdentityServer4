@@ -22,13 +22,14 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly UserManager<UserEntity> _userManager;
+    private readonly SignInManager<UserEntity> _signInManager;
     private readonly IRoleRepository _roleRepository;
     private readonly IProfileRepository _profileRepository;
     private readonly ApplicationDbContext _context;
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AuthService(UserManager<UserEntity> userManager,ApplicationDbContext context, IUserRepository userRepository, IRoleRepository roleRepository, IProfileRepository profileRepository, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+    public AuthService(SignInManager<UserEntity> signInManager,UserManager<UserEntity> userManager,ApplicationDbContext context, IUserRepository userRepository, IRoleRepository roleRepository, IProfileRepository profileRepository, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -37,6 +38,7 @@ public class AuthService : IAuthService
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         _context = context ?? throw new ArgumentNullException(nameof(context));
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
     }
     public async Task<AccessTokenDto> Login(LoginUserViewModel viewModel)
     {
@@ -241,4 +243,6 @@ public class AuthService : IAuthService
 
         await _userRepository.SaveChangesAsync();
     }
+
+
 }

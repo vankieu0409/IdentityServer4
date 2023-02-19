@@ -11,9 +11,7 @@ builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddHealthChecks();
 builder.Services.AddCors(options => options.AddPolicy("Cors", policy =>
     {
-        policy.AllowAnyOrigin().
-            AllowAnyMethod().
-            AllowAnyHeader();
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     }
 ));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,7 +39,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseHealthChecks("/health");
 
-app.UseCors("Cros");
+app.UseCors("Cors");
 
 app.UseHttpsRedirection();
 

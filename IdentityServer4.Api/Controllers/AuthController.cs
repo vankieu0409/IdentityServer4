@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Data;
 using IdentityServer4.Domain.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 
 namespace IdentityServer4.Api.Controllers
 {
@@ -15,21 +17,23 @@ namespace IdentityServer4.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-
+    
         public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<UserDto>> RegisterUser(CreateUserViewModel request)
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDto>> RegisterAsync(CreateUserViewModel request)
         {
             var response = await _authService.RegisterUser(request);
             return Ok(response);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login(LoginUserViewModel request)
+        [AllowAnonymous]
+        public async Task<ActionResult<UserDto>> LoginAsync(LoginUserViewModel request)
         {
             var response = await _authService.Login(request);
             if (response.Success)
