@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using IdentityServer.Client.Services.Interfaces
+@using Microsoft.JSInterop
+
+<AuthorizeView>
+    <Authorized>
+        <a href="authentication/profile">Hello, @context.User.Identity?.Name!</a>
+        <button class="nav-link btn btn-link" @onclick="BeginSignOut">Log out</button>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        var checkLogout = await _authentication.LogoutService();
+        if (checkLogout) _navigationManager.NavigateTo("/login",true);
+        else await _jsRuntime.InvokeVoidAsync("alert","Đăng không xuất thành công!");
+
+    }
+}

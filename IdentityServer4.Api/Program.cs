@@ -1,6 +1,9 @@
+using IdentityServer4.Api;
 using IdentityServer4.Infrastructure.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddHealthChecks();
-builder.Services.AddCors(options => options.AddPolicy("Cors", policy =>
-    {
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    }
+builder.Services.AddCors(options => options.AddPolicy("Cors",
+    policy => { policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); }
 ));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -37,6 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseHealthChecks("/health");
 
 app.UseCors("Cors");
@@ -46,6 +48,11 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+//app.SeedAsync().ConfigureAwait(false).GetAwaiter();
+//app.MapControllerRoute(
+//name: "account",
+//pattern: "{controller=Account}/{action=SignIn}/{id?}"
+//);
 
 app.MapControllers();
 

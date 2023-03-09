@@ -1,8 +1,10 @@
-﻿using System.Net.Http.Headers;
+﻿using Blazored.LocalStorage;
+
+using Microsoft.AspNetCore.Components.Authorization;
+
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
-using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
 
 namespace IdentityServer.Client.Services.Authentication;
 
@@ -36,13 +38,12 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
                 base64 += "=";
                 break;
         }
-
         return Convert.FromBase64String(base64);
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        string token = await _localStorage.GetItemAsStringAsync("token");
+        var token = await _localStorage.GetItemAsStringAsync("bearer");
 
         var identity = new ClaimsIdentity();
         _http.DefaultRequestHeaders.Authorization = null;
@@ -50,7 +51,8 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         if (!string.IsNullOrEmpty(token))
         {
             identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-            _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.Replace("\"", ""));
+            _http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("bearer", token.Replace("\"", ""));
         }
 
         var user = new ClaimsPrincipal(identity);
@@ -60,4 +62,6 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 
         return state;
     }
+
+    //public void NotifyAuthenticationStateChangedForLogout() => NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
 }

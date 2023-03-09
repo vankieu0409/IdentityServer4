@@ -1,21 +1,10 @@
-﻿@page "/loading"
-@using Microsoft.AspNetCore.Components.Authorization
-<AuthorizeView>
-    <Authorized>
-        <ul>
-            <li style="--color: #ef436b">
-                <span class="base"></span>
-                <span class="title">Loading</span>
-                <span class="icon">
-                    <ion-icon name="reload-circle"></ion-icon>
-                </span>
-            </li>
-        </ul>
-    </Authorized>
-    <NotAuthorized>
-        <ForbiddenComponet></ForbiddenComponet>
-    </NotAuthorized>
-</AuthorizeView>
-@code {
-
-}
+﻿
+<ul>
+    <li style="--color: #ef436b">
+        <span class="base"></span>
+        <span class="title">Loading</span>
+        <span class="icon">
+            <ion-icon name="reload-circle"></ion-icon>
+        </span>
+    </li>
+</ul>

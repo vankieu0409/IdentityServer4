@@ -9,9 +9,10 @@ public interface IAuthService
     public Task<AccessTokenDto> Login(LoginUserViewModel request);
     public Task<UserDto> RegisterUser(CreateUserViewModel request);
     public Task<AccessTokenDto> RefreshToken();
-    public bool VerifyPasswordHash(string password, string passwordHash, string passwordSalt);
-    void CreatePasswordHash(string password, out string passwordHash, out string passwordSalt);
     string CreateToken(UserDto user);
     RefreshTokenDto CreateRefreshToken();
     public void SetRefreshToken(RefreshTokenDto refreshToken, UserDto user);
+    public void CreateRoles(RoleEntity role);
+    public void UpdateRoles(RoleEntity role);
+    public Task<IList<string>> GetRolesOfUser(UserEntity user);
 }

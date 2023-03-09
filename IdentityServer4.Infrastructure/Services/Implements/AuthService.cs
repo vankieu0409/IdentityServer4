@@ -1,9 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-
-using IdentityServer4.Data;
+﻿using IdentityServer4.Data;
 using IdentityServer4.Data.Repositories.Interfaces;
 using IdentityServer4.Domain.Dtos;
 using IdentityServer4.Domain.Entities;
@@ -12,9 +7,13 @@ using IdentityServer4.Infrastructure.Services.Interfaces;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace IdentityServer4.Infrastructure.Services.Implements;
 
@@ -22,6 +21,7 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly UserManager<UserEntity> _userManager;
+    private readonly RoleManager<RoleEntity> _roleManager;
     private readonly SignInManager<UserEntity> _signInManager;
     private readonly IRoleRepository _roleRepository;
     private readonly IProfileRepository _profileRepository;
@@ -29,7 +29,9 @@ public class AuthService : IAuthService
     private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public AuthService(SignInManager<UserEntity> signInManager,UserManager<UserEntity> userManager,ApplicationDbContext context, IUserRepository userRepository, IRoleRepository roleRepository, IProfileRepository profileRepository, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+    public AuthService(SignInManager<UserEntity> signInManager, UserManager<UserEntity> userManager,
+        ApplicationDbContext context, IUserRepository userRepository, IRoleRepository roleRepository,
+        IProfileRepository profileRepository, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
@@ -40,25 +42,20 @@ public class AuthService : IAuthService
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         _signInManager = signInManager ?? throw new ArgumentNullException(nameof(signInManager));
     }
+
     public async Task<AccessTokenDto> Login(LoginUserViewModel viewModel)
     {
         var userEntity = await _userManager.FindByNameAsync(viewModel.UserName);
 
-
-        if (userEntity == null)
-        {
-            return new AccessTokenDto { Message = "User not found." };
-        }
-        if (!await _userManager.CheckPasswordAsync(userEntity,viewModel.Password))
-        {
+        if (userEntity == null) return new AccessTokenDto { Message = "User not found." };
+        if (!await _userManager.CheckPasswordAsync(userEntity, viewModel.Password))
             return new AccessTokenDto { Message = "Wrong Password." };
-        }
         var userDto = new UserDto()
         {
             Id = userEntity.Id,
-            UserName = userEntity.UserName,
+            UserName = userEntity.UserName
         };
-        string token = CreateToken(userDto);
+        var token = CreateToken(userDto);
         var refreshToken = CreateRefreshToken();
         SetRefreshToken(refreshToken, userDto);
 
@@ -73,24 +70,36 @@ public class AuthService : IAuthService
 
     public async Task<UserDto> RegisterUser(CreateUserViewModel request)
     {
-        CreatePasswordHash(request.Password, out string passwordHash, out string passwordSalt);
-        
         var user = new UserEntity
         {
             Id = Guid.NewGuid(),
-            UserName = request.UserName,
-            PasswordSalt = passwordSalt
+            UserName = request.Email,
+            NormalizedUserName = request.Email,
+            SecurityStamp = Guid.NewGuid().ToString(),
+            Email = request.Email,
+            EmailConfirmed = true,
+            NormalizedEmail = request.Email,
+            PhoneNumber = "",
+            PhoneNumberConfirmed = false,
+            LockoutEnabled = false,
+            LockoutEnd = DateTimeOffset.MinValue,
+            AccessFailedCount = 0,
+            IsDeleted = false,
+            PasswordSalt = CreatePasswordSalt(request.Password),
+            ConcurrencyStamp = Guid.NewGuid().ToString(),
+            TwoFactorEnabled = false
         };
         await _userManager.CreateAsync(user, request.Password);
-        await _userManager.AddToRoleAsync(user, request.Role);
-       
+        await _userManager.AddToRoleAsync(user, "User");
+
+
         var profileCreate = new ProfileEntities()
         {
             Id = Guid.NewGuid(),
-            Name = request.Name,
-            Description = request.Description,
-            Image = request.Image,
-            UserId = user.Id
+            Name = request.FullName,
+            UserId = user.Id,
+            Description = "",
+            Image = ""
         };
 
         await _profileRepository.AddAsync(profileCreate);
@@ -106,13 +115,12 @@ public class AuthService : IAuthService
                 Description = profileCreate.Description,
                 Image = profileCreate.Image
             }
-
         };
 
         return userDto;
     }
 
-    public async Task<AccessTokenDto> RefreshToken()
+    public Task<AccessTokenDto> RefreshToken()
     {
         var userDtoCollection = new List<UserDto>();
         foreach (var userEntity in _userRepository.AsQueryable())
@@ -120,7 +128,7 @@ public class AuthService : IAuthService
             var userDto = new UserDto()
             {
                 Id = userEntity.Id,
-                UserName = userEntity.UserName,
+                UserName = userEntity.UserName
             };
 
             var profileEntity = _profileRepository.AsQueryable().FirstOrDefault(c => c.UserId == userEntity.Id);
@@ -131,36 +139,34 @@ public class AuthService : IAuthService
                     Id = profileEntity.Id,
                     Name = profileEntity.Name,
                     Description = profileEntity.Description,
-                    Image = profileEntity.Image,
+                    Image = profileEntity.Image
                 };
-                userDto.Profile=profileDto;
+                userDto.Profile = profileDto;
             }
 
             userDtoCollection.Add(userDto);
         }
+
         var refreshToken = _httpContextAccessor?.HttpContext?.Request.Cookies["refreshToken"];
         var user = userDtoCollection.FirstOrDefault(u => u.RefreshToken == refreshToken);
         if (user == null)
-        {
-            return new AccessTokenDto { Message = "Invalid Refresh Token" };
-        }
+            return Task.FromResult(new AccessTokenDto { Message = "Invalid Refresh Token" });
         else if (user.TokenExpires < DateTime.Now)
-        {
-            return new AccessTokenDto { Message = "Token expired." };
-        }
+            return Task.FromResult(new AccessTokenDto { Message = "Token expired." });
 
-        string token = CreateToken(user);
+        var token = CreateToken(user);
         var newRefreshToken = CreateRefreshToken();
         SetRefreshToken(newRefreshToken, user);
 
-        return new AccessTokenDto
+        return Task.FromResult(new AccessTokenDto
         {
             Success = true,
             Token = token,
             RefreshToken = newRefreshToken.Token,
             TokenExpires = newRefreshToken.Expires
-        };
+        });
     }
+
     public bool VerifyPasswordHash(string password, string passwordHash, string passwordSalt)
     {
         byte[] test;
@@ -170,12 +176,12 @@ public class AuthService : IAuthService
         return computeHash.SequenceEqual(Encoding.UTF8.GetBytes(passwordHash));
     }
 
-    public void CreatePasswordHash(string password, out string passwordHash, out string passwordSalt)
+    public string CreatePasswordSalt(string password)
     {
-        var hmac = new HMACSHA512();
-        var test = hmac.Key;
-        passwordSalt = Convert.ToBase64String(hmac.Key);
-        passwordHash = Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(password)));
+        var passwordBytes = Encoding.UTF8.GetBytes(password);
+        var sha256 = SHA256.Create();
+        var hashBytes = sha256.ComputeHash(passwordBytes);
+        return Convert.ToBase64String(hashBytes);
     }
 
     public string CreateToken(UserDto user)
@@ -195,21 +201,23 @@ public class AuthService : IAuthService
         //    claims: claims,
         //    expires: DateTime.Now.AddDays(1),
         //    signingCredentials: creds);
-        var userRoles = _roleRepository.AsQueryable().FirstOrDefault(p => p.Id == _context.UserRoles.Where(c => c.UserId == user.Id).Select(c => c.RoleId).FirstOrDefault());
-        List<Claim> claims = new List<Claim>(){
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Role,userRoles.NormalizedName )
+        var userRoles = _roleRepository.AsQueryable().FirstOrDefault(p =>
+            p.Id == _context.UserRoles.Where(c => c.UserId == user.Id).Select(c => c.RoleId).FirstOrDefault());
+        List<Claim> claims = new()
+        {
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.UserName),
+            new(ClaimTypes.Role, userRoles.NormalizedName)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Jwt:Secret").Value));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:ValidIssuer"],
-            audience: _configuration["Jwt:ValidAudience"],
-            claims: claims,
-            expires: DateTime.Now.AddDays(1),
+            _configuration["Jwt:ValidIssuer"],
+            _configuration["Jwt:ValidAudience"],
+            claims,
+            expires: DateTime.Now.AddMinutes(5),
             signingCredentials: creds);
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         return jwt;
@@ -220,7 +228,7 @@ public class AuthService : IAuthService
         var refreshToken = new RefreshTokenDto
         {
             Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-            Expires = DateTime.Now.AddDays(7),
+            Expires = DateTime.Now.AddMinutes(5),
             Created = DateTime.Now
         };
 
@@ -232,7 +240,7 @@ public class AuthService : IAuthService
         var cookieOptions = new CookieOptions
         {
             HttpOnly = true,
-            Expires = refreshToken.Expires,
+            Expires = refreshToken.Expires
         };
         _httpContextAccessor?.HttpContext?.Response
             .Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
@@ -244,5 +252,18 @@ public class AuthService : IAuthService
         await _userRepository.SaveChangesAsync();
     }
 
+    public void CreateRoles(RoleEntity role)
+    {
+        _roleManager.CreateAsync(role);
+    }
 
+    public void UpdateRoles(RoleEntity role)
+    {
+        _roleManager.UpdateAsync(role);
+    }
+
+    public async Task<IList<string>> GetRolesOfUser(UserEntity user)
+    {
+        return await _userManager.GetRolesAsync(user);
+    }
 }

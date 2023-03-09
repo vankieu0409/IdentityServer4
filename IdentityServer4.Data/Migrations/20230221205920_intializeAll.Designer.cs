@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdentityServer4.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230216081014_VerSionTest")]
-    partial class VerSionTest
+    [Migration("20230221205920_intializeAll")]
+    partial class intializeAll
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

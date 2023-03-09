@@ -6,7 +6,7 @@
     margin: 20px;
     box-sizing: border-box;
     /*             border: 2px rgb(83, 133, 145) solid; */
-    box-shadow: 0px 5px 15px -6px rgba(0,0,0,0.75);
+    box-shadow: 0px 5px 15px -6px rgba(0, 0, 0, 0.75);
     border-radius: 20px;
     max-width: 575px;
     margin: 10px auto;
@@ -33,17 +33,11 @@ h1 {
     font-weight: 700;
 }
 
-.number {
-    color: #CDC5BD;
-}
+.number { color: #CDC5BD; }
 
-#moon {
-    position: relative;
-}
+#moon { position: relative; }
 
-#earth {
-    position: relative;
-}
+#earth { position: relative; }
 
 svg {
     max-width: 100%;
@@ -60,26 +54,26 @@ svg {
     font-size: 0.9em;
 }
 
-    #details span {
-        /*   display: block; */
-        color: rgb(83, 133, 145);
-        display: inline-block;
-    }
+#details span {
+    /*   display: block; */
+    color: rgb(83, 133, 145);
+    display: inline-block;
+}
 
-        #details span:nth-child(odd) {
-            width: 150px;
-            border-left: 2px solid rgb(83, 133, 145);
-            padding-left: 10px;
-        }
+#details span:nth-child(odd) {
+    width: 150px;
+    border-left: 2px solid rgb(83, 133, 145);
+    padding-left: 10px;
+}
 
-        #details span:nth-child(even) {
-            align-self: flex-end;
-            color: #CDC5BD;
-            text-align: right;
-            width: 100px;
-            border-right: 2px solid #CDC5BD;
-            padding-right: 10px;
-        }
+#details span:nth-child(even) {
+    align-self: flex-end;
+    color: #CDC5BD;
+    text-align: right;
+    width: 100px;
+    border-right: 2px solid #CDC5BD;
+    padding-right: 10px;
+}
 
 li {
     list-style: none;

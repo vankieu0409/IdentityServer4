@@ -1,0 +1,22 @@
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "traceId": "00-31dfd5ad0a6ce136d541f62e4764566b-dd5fb850a4e4b2b4-00",
+  "errors": {
+    "Password": [ "Password phải có ít nhất 1 chữ số", "Password phải tù tám ký tự trở lên" ],
+    "UserName": [ "Email không đúng định dạng!" ]
+  }
+} {
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "traceId": "00-5a8c1da42563dbe08ec4323da9977e01-e4ec7ff1f4b4ecf3-00",
+  "errors": { "Password": [ "Password phải có ít nhất 1 chữ số", "Password phải tù tám ký tự trở lên" ] }
+} {
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+  "title": "One or more validation errors occurred.",
+  "status": 400,
+  "traceId": "00-4e78ac774c47f7a816f46929e29a5535-14fd0e73ed0e84ce-00",
+  "errors": { "Password": [ "Password phải có ít nhất 1 chữ số" ] }
+}'

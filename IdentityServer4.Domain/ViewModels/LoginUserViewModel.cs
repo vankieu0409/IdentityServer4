@@ -1,7 +1,14 @@
-﻿namespace IdentityServer4.Domain.ViewModels;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace IdentityServer4.Domain.ViewModels;
 
 public class LoginUserViewModel
 {
+    [Required(ErrorMessage = "Email không được để trống!")]
+    [EmailAddress(ErrorMessage = "Email không đúng định dạng!")]
     public string UserName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password không được để trống!")]
+    [RegularExpression(@"^(?!.* )(?=.*\d)(?=.*[A-Z]).{6,20}$", ErrorMessage = "Password từ 6-20 ký tự, có ít nhất 1 chữ số và 1 ký tự viết hoa!")]
     public string Password { get; set; } = string.Empty;
 }

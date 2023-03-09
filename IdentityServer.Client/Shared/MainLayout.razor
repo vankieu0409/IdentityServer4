@@ -1,12 +1,26 @@
 ﻿@inherits LayoutComponentBase
-@using IdentityServer.Client.Pages;
+@using IdentityServer.Client.Pages.Authentication
 
+<AuthorizeView>
+    <Authorized>
+        <div class="page">
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+            <main>
 
-<div class="page">
+                <div class="top-row px-4">
+                    <LoggedInDisplay></LoggedInDisplay>
+                    <Search />
+                </div>
 
-    <main>
-        @Body
-    </main>
-
-
-</div>
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <LoginRegister></LoginRegister>
+    </NotAuthorized>
+</AuthorizeView>

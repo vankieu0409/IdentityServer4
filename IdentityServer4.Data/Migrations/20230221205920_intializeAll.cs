@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IdentityServer4.Data.Migrations
 {
-    public partial class VerSionTest : Migration
+    public partial class intializeAll : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -1,36 +1,38 @@
 ﻿/*@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100,200,300,400,500,600,700,800,900&family=Space+Grotesk:wght@300,400,500,600,700@display=swap');*/
 
-* {
+/** {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
+}*/
 
-body {
+/*body {
     font-family: "Poppins", sans-serif;
     width: 100vm;
     height: 100vh;
-    display: flex;
     justify-content: center;
     align-items: center;
     background-color: rgb(11, 5, 28);
-}
+}*/
 
 ul {
+    font-family: "Poppins", sans-serif;
+    background-color: rgb(11, 5, 28);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 800px;
+    width: 100vm;
+    height: 100vh;
     list-style-type: none;
 }
 
-    ul li {
-        position: relative;
-        display: grid;
-        place-items: center;
-        width: 200px;
-        height: 200px;
-    }
+ul li {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 200px;
+    height: 200px;
+}
 
 li .base {
     position: relative;
@@ -44,13 +46,9 @@ li .base {
 }
 
 @keyframes spin {
-    0% {
-        transform: rotateX(60deg) rotateZ(0);
-    }
+    0% { transform: rotateX(60deg) rotateZ(0); }
 
-    100% {
-        transform: rotateX(60deg) rotateZ(-360deg);
-    }
+    100% { transform: rotateX(60deg) rotateZ(-360deg); }
 }
 
 li .base::after {
@@ -97,28 +95,24 @@ li .icon {
     /* animation-play-state: paused; */
 }
 
-    .base:hover + .title + .icon {
-        transform: rotateY(30deg) skewY(-24deg) translateY(-160px);
-        color: var(--color);
-        filter: drop-shadow(0 0 3px var(--color));
-        animation: wave 1s ease-in-out infinite;
-    }
+.base:hover + .title + .icon {
+    transform: rotateY(30deg) skewY(-24deg) translateY(-160px);
+    color: var(--color);
+    filter: drop-shadow(0 0 3px var(--color));
+    animation: wave 1s ease-in-out infinite;
+}
 
-    .base:hover + .title {
-        transform: rotateY(30deg) skewY(-24deg) translateY(-90px);
-        color: var(--color);
-        text-shadow: drop-shadow(0 0 3px var(--color));
-        transition-delay: 0.1s;
-        opacity: 1;
-        animation: wave 1s ease-in-out infinite;
-    }
+.base:hover + .title {
+    transform: rotateY(30deg) skewY(-24deg) translateY(-90px);
+    color: var(--color);
+    text-shadow: drop-shadow(0 0 3px var(--color));
+    transition-delay: 0.1s;
+    opacity: 1;
+    animation: wave 1s ease-in-out infinite;
+}
 
 @keyframes wave {
-    0%, 100% {
-        margin-bottom: 0;
-    }
+    0%, 100% { margin-bottom: 0; }
 
-    50% {
-        margin-bottom: 15px;
-    }
+    50% { margin-bottom: 15px; }
 }

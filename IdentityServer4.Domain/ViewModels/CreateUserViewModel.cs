@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 
-using static System.Net.Mime.MediaTypeNames;
+namespace IdentityServer4.Domain.ViewModels;
 
-namespace IdentityServer4.Domain.ViewModels
+public class CreateUserViewModel
 {
-    public class CreateUserViewModel
-    {
-        public string UserName { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public string Image { get; set; } = string.Empty;
-        public string Role { get; set; }
-    }
+    [Required(ErrorMessage = "Không được để trống!")]
+    public string FullName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Không được để trống!")]
+    [RegularExpression(@"^(?!.* )(?=.*\d)(?=.*[A-Z]).{6,20}$",
+        ErrorMessage = "Password từ 6-20 ký tự, có ít nhất 1 chữ số và 1 ký tự viết hoa!")]
+    public string Password { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Không được để trống!")]
+    [EmailAddress(ErrorMessage = "Email không đúng định dạng!")]
+    public string Email { get; set; } = string.Empty;
 }

@@ -5,6 +5,7 @@ namespace IdentityServer.Client.Services.Interfaces;
 
 public interface IAuthenticationService
 {
-    public Task<bool> LoginService(LoginUserViewModel viewModel);
-
+    public Task<HttpResponseMessage> LoginService(LoginUserViewModel viewModel);
+    public Task<bool> RegiterService(CreateUserViewModel viewModel);
+    public Task<bool> LogoutService();
 }

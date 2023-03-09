@@ -8,14 +8,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IdentityServer4.Data.Repositories.Implements
+namespace IdentityServer4.Data.Repositories.Implements;
+
+public class RoleRepository : RepositoryAsync<RoleEntity>, IRoleRepository
 {
-    public class RoleRepository : RepositoryAsync<RoleEntity>, IRoleRepository
+    private readonly ApplicationDbContext _context;
+
+    public RoleRepository(ApplicationDbContext context) : base(context, context)
     {
-        private readonly ApplicationDbContext _context;
-        public RoleRepository(ApplicationDbContext context) : base(context,context)
-        {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-        }
+        _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 }
